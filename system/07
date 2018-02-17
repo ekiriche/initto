@@ -1,0 +1,1 @@
+ps aux | grep -w 'sshd' | grep 'root' | awk ' {print $2} '
