@@ -21,7 +21,6 @@ hash_exist=$(sudo md5sum -c /etc/crontab_hash | sed 's/.*[ ]//g')
 
 if [[ -z $hash_exist ]]
 then
-	echo "check_exist"
 	sudo md5sum /etc/crontab > /etc/crontab_hash
 	exit 0
 fi
@@ -29,9 +28,8 @@ fi
 if [[ $hash_exist = "FAILED" ]]
 then
 	touch /tmp/mail.txt
-	echo "Yoyoyo! There is a new UPDATE in corban" > mail.txt
+	echo "Yoyoyo! There is a new UPDATE in corban" > /tmp/mail.txt
 	sudo sendmail root < /tmp/mail.txt
-	echo "check_failed"
 	sudo rm -rf /tmp/mail.txt
 	sudo md5sum /etc/crontab > /etc/crontab_hash
 fi
