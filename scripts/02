@@ -2,4 +2,9 @@ sudo touch /var/log/update_script.log
 log=$(sudo apt-get update && sudo apt-get upgrade)
 echo "$log" | sudo tee /var/log/update_script.log
 
-echo "0 4 * * 1 bash ~/initto/scripts/02" | crontab -
+check=$(crontab -l | grep -F "0 4 * * 1 bash ~/initto/scripts/02")
+
+if [[ -z $check ]]
+then
+	(crontab -l 2>/dev/null; echo "0 4 * * 1 bash ~/initto/scripts/02") | crontab -
+fi

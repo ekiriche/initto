@@ -1,0 +1,37 @@
+post_check=$(sudo which postfix)
+
+if [[ -z $post_check ]]
+then
+	sudo apt-get install postfix
+	sudo mkfifo /var/spool/postfix/public/pickup
+	sudo service postfix restart
+fi
+
+check=$(crontab -l | grep -F "0 0 * * * bash ~/initto/scripts/04")
+
+if [[ -z $check ]]
+then
+	(crontab -l 2>/dev/null; echo "0 0 * * * bash ~/initto/scripts/04") | crontab -
+fi
+
+sudo touch /etc/crontab_hash
+sudo chmod 777 /etc/crontab_hash
+
+hash_exist=$(sudo md5sum -c /etc/crontab_hash | sed 's/.*[ ]//g')
+
+if [[ -z $hash_exist ]]
+then
+	echo "check_exist"
+	sudo md5sum /etc/crontab > /etc/crontab_hash
+	exit 0
+fi
+
+if [[ $hash_exist = "FAILED" ]]
+then
+	touch /tmp/mail.txt
+	echo "Yoyoyo! There is a new UPDATE in corban" > mail.txt
+	sudo sendmail root < /tmp/mail.txt
+	echo "check_failed"
+	sudo rm -rf /tmp/mail.txt
+	sudo md5sum /etc/crontab > /etc/crontab_hash
+fi
