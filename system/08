@@ -1,0 +1,4 @@
+1. Generate the keys with command "ssh-keygen -t rsa". This will create two files in ~/.ssh - id_rsa and id_rsa.pub.
+2. Create ~/.ssh/authorized_keys
+3. cat id_rsa.pub >> authorised_keys
+4. PROFIT!
