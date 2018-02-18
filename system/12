@@ -1,1 +1,1 @@
-ls -la /var
+du -sh -- /var/* | sort -hr
